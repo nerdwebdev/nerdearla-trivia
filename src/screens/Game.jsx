@@ -25,9 +25,9 @@ export default function Game({ session }) {
   }, [session]);
 
   const initGame = async () => {
-    // Fetch questions (random 15)
+    // Fetch questions from safe view (no correct_option exposed)
     const { data: qs, error } = await supabase
-      .from('questions')
+      .from('questions_safe')
       .select('*')
       .limit(TOTAL_QUESTIONS);
 
@@ -105,40 +105,28 @@ export default function Game({ session }) {
 
     const q = questions[currentIdx];
     const timeTaken = Date.now() - startTimeRef.current;
-    const isCorrect = option === q.correct_option;
-    let points = 0;
 
-    if (isCorrect && timeTaken <= 16000) {
-      const speedBonus = Math.round(Math.max(0, (1 - timeTaken / 15000)) * 100);
-      points = 100 + speedBonus;
-    }
-
-    setFeedback({ correct: isCorrect, correctOption: q.correct_option });
     setSelected(option);
 
-    if (isCorrect) {
-      setScore(s => s + points);
-      setCorrectCount(c => c + 1);
-    }
-
-    // Save answer
-    await supabase.from('answers').insert({
-      session_id: sessionId,
-      question_id: q.id,
-      selected_option: option,
-      is_correct: isCorrect,
-      time_taken_ms: timeTaken,
-      points,
+    // Server-side validation — correct answer never leaves the server
+    const { data: result, error: rpcError } = await supabase.rpc('submit_answer', {
+      p_session_id: sessionId,
+      p_question_id: q.id,
+      p_selected_option: option,
+      p_time_taken_ms: timeTaken,
     });
 
-    // Update session score
-    const newScore = score + points;
-    const newCorrect = correctCount + (isCorrect ? 1 : 0);
-    await supabase.from('game_sessions').update({
-      score: newScore,
-      correct_answers: newCorrect,
-      ...(currentIdx === questions.length - 1 ? { finished_at: new Date().toISOString() } : {})
-    }).eq('id', sessionId);
+    if (rpcError || result?.error) {
+      console.error('Submit error:', rpcError || result?.error);
+      setFeedback({ correct: false, correctOption: '?' });
+    } else {
+      const isCorrect = result.is_correct;
+      setFeedback({ correct: isCorrect, correctOption: result.correct_option });
+      if (isCorrect) {
+        setScore(s => s + result.points);
+        setCorrectCount(c => c + 1);
+      }
+    }
 
     // Auto advance after 1.2s
     setTimeout(() => {
