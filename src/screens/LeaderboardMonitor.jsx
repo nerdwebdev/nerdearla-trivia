@@ -87,7 +87,7 @@ export default function LeaderboardMonitor() {
               </div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontWeight: 700 }}>{e.players?.display_name || 'Jugador'}</div>
-                <div style={{ color: '#929292', fontSize: '0.8em' }}>{e.correct_answers}/15 correctas</div>
+                <div style={{ color: '#929292', fontSize: '0.8em' }}>{e.correct_answers}/20 correctas</div>
               </div>
               <div style={{
                 fontWeight: 700, color: '#FFBA00', fontSize: i < 3 ? '2rem' : '1.3rem',

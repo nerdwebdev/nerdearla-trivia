@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 
 const TIMER_SECONDS = 15;
-const TOTAL_QUESTIONS = 15;
+const TOTAL_QUESTIONS = 20;
 
 export default function Game({ session }) {
   const navigate = useNavigate();

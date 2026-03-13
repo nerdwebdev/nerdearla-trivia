@@ -84,7 +84,7 @@ export default function Leaderboard({ session }) {
                     {isMe && <span style={{ color: 'var(--teal)', fontSize: '0.8rem' }}> (tú)</span>}
                   </div>
                   <div style={{ color: 'var(--muted)', fontSize: '0.8rem' }}>
-                    {e.correct_answers}/15 correctas
+                    {e.correct_answers}/20 correctas
                   </div>
                 </div>
                 <div style={{ fontWeight: 700, color: 'var(--yellow)', fontSize: '1.1rem', fontFamily: "'Rift Soft', 'Arial Black', sans-serif" }}>

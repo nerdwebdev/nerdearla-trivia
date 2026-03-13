@@ -58,7 +58,7 @@ export default function Lobby({ session }) {
 
       <div className="card" style={{ width: '100%' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <Rule icon="📝" text="15 preguntas sobre JavaScript y Nerdearla" />
+          <Rule icon="📝" text="20 preguntas sobre JavaScript y Nerdearla" />
           <Rule icon="⏱️" text="15 segundos por pregunta" />
           <Rule icon="⚡" text="Más rápido = más puntos" />
           <Rule icon="🏆" text="¡Los 3 primeros ganan premios!" />
